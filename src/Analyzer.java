@@ -1,13 +1,11 @@
         import java.net.*;
         import java.io.*;
 
-
+//wins, kdr, kills, time played, win percentage, matches,
 public class Analyzer{
+    private String json = "";
 
-    public static String wins(String ign){
-
-
-
+    public void retrieveJSON(String ign){
         try{
 
             String website = "https://fortnitetracker.com/profile/all/" + ign;
@@ -23,28 +21,40 @@ public class Analyzer{
             in.close();
 
             line = line.substring(line.indexOf("<script type=\"text/javascript\">var imp_data = {")+31,line.indexOf("<script type=\"text/x-template\" id=\"trn-profile-header-favorite-template\">")-9);
-            String json = line.substring(line.indexOf("stats")+5);
-            json = json.substring(json.indexOf("stats")+5);
-            json = json.substring(json.indexOf("all"));
+            this.json = line.substring(line.indexOf("stats")+5);
+            this.json = this.json.substring(this.json.indexOf("stats")+5);
+            this.json = this.json.substring(this.json.indexOf("all"), this.json.indexOf("\"platform\": \"touch\","));
 
 
 
         }
         catch(FileNotFoundException ex)
         {
-            return "unknown";
+            this.json = "unknown";
         }
         catch(MalformedURLException e)
         {
-            return "badly formed url exception occurred";
+            this.json = "badly formed url exception occurred";
 
         }
         catch(IOException e)
         {
-            return "IO exception occurred";
+            this.json = "IO exception occurred";
 
         }
+        if(!this.json.contains("[0-9]"))
+            System.out.println(this.json);
 
+    }
+    public String wins(){
+        String winn = this.json.substring(this.json.indexOf("Wins"));
+        winn = winn.substring(winn.indexOf("value")+3, winn.indexOf("."));
+        return winn;
+    }
+    public String kdr(){
+        String kd = this.json.substring(this.json.indexOf("KD"));
+        kd = kd.substring(kd.indexOf("value")+3, kd.indexOf(","));
+        return kd;
     }
 
 
