@@ -1,36 +1,39 @@
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
+import java.nio.charset.*;
+import org.json.*;
 
 
 public class Analyzer{
    
    public static String wins(String ign){
    
-   BufferedReader br = null;
+  
     
     try{
       
      String website = "https://fortnitetracker.com/profile/all/" + ign;
      
      URL tracker = new URL(website);
-     
-     br = new BufferedReader(new InputStreamReader(tracker.OpenStream()));
-     
+     URLConnection yc = tracker.openConnection();
+     BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));     
       String inputLine;
       String line = "";
      
-    while ((inputLine = br.readLine()) != null)
+    while ((inputLine = in.readLine()) != null)
       		      line+=inputLine;
-        
-        			br.close();
+                         System.out.println(line+ "AHAAAAA");
+
+        			in.close();
         			int pos=0;
 	                    
-			        pos = line.indexOf("WINS");
+			        pos = line.indexOf("'metadata': {'key': 'Top1', 'name': 'Wins','categoryKey': 'tops','categoryName': 'Tops','isReversed': false},'value': ", pos+1);
       			  if(pos>-1)
         			{
-          			 int endbdayIndex = line.indexOf("matchesFiltered.reduce(function (total, match) { return total + self.getStat(match.stats, 'Top1').value }, 0);");
-          				String wins = line.substring(pos+6, endbdayIndex);
+          			 //int endbdayIndex = line.indexOf("'metadata': {'key': 'Top1', 'name': 'Wins','categoryKey': 'tops','categoryName': 'Tops','isReversed': false},'value': ");
+            
+          				String wins = line.substring(pos+211, pos+215);
           				return "Wins: " + wins ;                
 			    		}
     					else
@@ -54,6 +57,8 @@ public class Analyzer{
 			  }
    
    }
+    
+   
  }
 
 			  
