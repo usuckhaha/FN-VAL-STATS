@@ -1,8 +1,7 @@
+//@Author: Angel
 public class Player {
     private String tag="";
-    public Player(){
-
-    }
+    public Player(){}
     public Player(String tag){
         this.tag = tag;
     }
